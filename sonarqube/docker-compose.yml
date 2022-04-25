@@ -4,9 +4,9 @@ services:
   sonarqube:
     image: sonarqube
     expose:
-      - 9000
+      - 9001
     ports:
-      - "127.0.0.1:1773:9000"
+      - "127.0.0.1:1773:9001"
     networks:
       - sonarnet
     environment:
