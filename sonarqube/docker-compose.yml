@@ -1,42 +1,28 @@
 version: "3"
-
 services:
   sonarqube:
-    image: sonarqube
-    expose:
-      - 9001
+    container_name: sonarqube
+    image: sonarqube:latest
+    depends_on:
+      - db
+    environment:
+       SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonarqubedb
+       SONAR_JDBC_USERNAME: sonar
+       SONAR_JDBC_PASSWORD: sonar
+     # - SONAR.SEARCH.JAVAADDITIONALOPTS: -Dbootstrap.system_call_filter=false
+    volumes:
+      - /opt/sonarCE/data:/opt/sonarqube/data
+      - /opt/sonarCE/extentions:/opt/sonarqube/extensions
+      - /opt/sonarCE/logs/:/opt/sonarqube/logs
     ports:
-      - "127.0.0.1:1773:9001"
-    networks:
-      - sonarnet
-    environment:
-      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
-      - SONARQUBE_JDBC_USERNAME=sonar
-      - SONARQUBE_JDBC_PASSWORD=sonar
-    volumes:
-      - sonarqube_conf:/opt/sonarqube/conf
-      - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_extensions:/opt/sonarqube/extensions
-      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
-
+      - "1773:9000"
   db:
-    image: postgres
-    networks:
-      - sonarnet
+    container_name: postgresql
+    image: postgres:12
     environment:
-      - POSTGRES_USER=sonar
-      - POSTGRES_PASSWORD=sonar
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+      POSTGRES_DB: sonarqubedb
     volumes:
-      - postgresql:/var/lib/postgresql
-      - postgresql_data:/var/lib/postgresql/data
-
-networks:
-  sonarnet:
-
-volumes:
-  sonarqube_conf:
-  sonarqube_data:
-  sonarqube_extensions:
-  sonarqube_bundled-plugins:
-  postgresql:
-  postgresql_data:
+      - /opt/postgresqlCE/:/var/lib/postgresql
+      - /opt/postgresqlCE/data:/var/lib/postgresql/data
