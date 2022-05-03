@@ -26,7 +26,7 @@ services:
     restart: always
     environment:
       SERVER_NAME: kibana
-      ELASTICSEARCH_HOSTS: http://elasticsearch:1071
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
     ports:
       - "1453:5601"
     depends_on:
